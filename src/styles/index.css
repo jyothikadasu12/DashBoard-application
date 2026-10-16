@@ -1,0 +1,33 @@
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Allow flex and grid children to shrink */
+main,
+section,
+aside,
+header {
+  min-width: 0;
+}
+
+/* Images should never overflow their containers */
+img {
+  max-width: 100%;
+}
