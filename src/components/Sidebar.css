@@ -1,76 +1,56 @@
 
+@reference "../index.css";
+
 .sidebar {
-  width: 235px;
-  min-height: 100vh;
-  padding: 28px 18px;
+  @apply flex min-h-screen w-[235px] shrink-0 flex-col px-[18px] py-7 text-white;
   background: #171725;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
 }
 
 .brand {
-  margin: 0 0 42px;
-  font-size: 25px;
+  @apply mb-[42px] mt-0 text-[25px];
   color: #fb7185;
 }
 
 .sidebar-label {
+  @apply text-[11px] tracking-[1.5px];
   color: #9696ac;
-  font-size: 11px;
-  letter-spacing: 1.5px;
 }
 
 .sidebar-nav {
-  display: grid;
-  gap: 10px;
-  margin-top: 15px;
+  @apply mt-[15px] grid gap-2.5;
 }
 
 .sidebar-nav a {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 13px;
-  border-radius: 9px;
+  @apply flex items-center gap-3 rounded-[9px] p-[13px] no-underline transition-colors duration-200;
   color: #c7c7d8;
-  text-decoration: none;
-  transition: background 0.2s, color 0.2s;
 }
 
 .sidebar-nav a:hover,
 .sidebar-nav a.active {
-  background: #353047;
+  background: #5946a1;
   color: #fb7185;
 }
 
 .sidebar-footer {
-  margin-top: auto;
-  padding-top: 35px;
+  @apply mt-auto pt-[35px] text-[13px];
   color: #9696ac;
-  font-size: 13px;
 }
 
 @media (max-width: 700px) {
   .sidebar {
-    width: 100%;
-    min-height: auto;
-    padding: 15px;
+    @apply min-h-0 w-full p-[15px];
   }
 
   .brand {
-    margin: 0 0 15px;
+    @apply mb-[15px];
   }
 
   .sidebar-nav {
-    display: flex;
-    flex-wrap: wrap;
-    margin-top: 8px;
+    @apply mt-2 flex flex-wrap;
   }
 
   .sidebar-footer,
   .sidebar-label {
-    display: none;
+    @apply hidden;
   }
 }

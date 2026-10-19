@@ -1,27 +1,28 @@
+@reference "../index.css";
 
+/* Main application layout */
 .app-layout {
-  display: flex;
-  min-height: 100vh;
+  @apply flex min-h-screen;
 }
 
+/* Main content area */
 .main-area {
-  min-width: 0;
-  flex: 1;
+  @apply min-w-0 flex-1;
 }
 
+/* Page content container */
 .page-content {
-  width: 100%;
+  @apply mx-auto w-full p-[30px];
   max-width: 1600px;
-  margin: 0 auto;
-  padding: 30px;
 }
 
+/* Mobile responsive */
 @media (max-width: 700px) {
   .app-layout {
-    flex-direction: column;
+    @apply flex-col;
   }
 
   .page-content {
-    padding: 20px 15px;
+    @apply px-[15px] py-5;
   }
 }

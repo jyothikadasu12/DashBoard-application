@@ -11,7 +11,6 @@ export default function Users() {
         <div>
           <p className="users-eyebrow">TEAM MANAGEMENT</p>
           <h1>Users</h1>
-          <p>View and manage all team members.</p>
         </div>
 
         <div className="users-total">
@@ -24,9 +23,7 @@ export default function Users() {
         <div className="users-card-heading">
           <div>
             <h2>All members</h2>
-            <p>Members added in Settings appear here automatically.</p>
           </div>
-          <span>{teamMembers.length} total</span>
         </div>
 
         <div className="users-table-wrap">

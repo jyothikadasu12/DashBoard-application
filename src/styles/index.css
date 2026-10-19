@@ -1,4 +1,6 @@
+@import "tailwindcss";
 
+/* Default theme: Dark */
 :root {
   color-scheme: dark;
 
@@ -17,6 +19,7 @@
   --accent-border: #704052;
 }
 
+/* Light theme */
 :root[data-theme="light"] {
   color-scheme: light;
 
@@ -31,12 +34,14 @@
   --border-color: #e5e7ef;
 }
 
+/* Dark theme color scheme */
 :root[data-theme="dark"][data-accent="rose"],
 :root[data-theme="dark"][data-accent="blue"],
 :root[data-theme="dark"][data-accent="violet"] {
   color-scheme: dark;
 }
 
+/* Rose accent */
 :root[data-accent="rose"] {
   --accent: #e34b70;
 }
@@ -46,6 +51,7 @@
   --accent-border: #f3c4d0;
 }
 
+/* Blue accent */
 :root[data-accent="blue"] {
   --accent: #4f7df3;
 }
@@ -55,6 +61,7 @@
   --accent-border: #c7d7ff;
 }
 
+/* Violet accent */
 :root[data-accent="violet"] {
   --accent: #9b6af5;
 }
@@ -64,6 +71,7 @@
   --accent-border: #dfd0ff;
 }
 
+/* Global layout reset */
 html,
 body,
 #root {
@@ -71,14 +79,23 @@ body,
   margin: 0;
 }
 
+/* Global body styles */
 body {
   background: var(--app-background);
   color: var(--text-primary);
 }
 
+/* Consistent form and button fonts */
 button,
 input,
 select,
 textarea {
   font: inherit;
+}
+
+/* Consistent box sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }

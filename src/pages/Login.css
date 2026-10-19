@@ -1,59 +1,46 @@
+@reference "../index.css";
 
+/* Login page */
 .login-page {
-  min-height: 100vh;
-  padding: 24px;
-  display: grid;
-  place-items: center;
+  @apply grid min-h-screen place-items-center p-6;
   background: #f5f4fa;
 }
 
+/* Login card */
 .login-card {
-  width: 100%;
-  max-width: 420px;
-  padding: 38px;
-  background: white;
-  border: 1px solid #e9e8ef;
-  border-radius: 18px;
+  @apply w-full max-w-[420px] rounded-[18px] border p-[38px];
+  background: #fff;
+  border-color: #e9e8ef;
   box-shadow: 0 15px 45px #1717250c;
 }
 
+/* Logo */
 .login-logo {
-  width: 48px;
-  height: 48px;
-  display: grid;
-  place-items: center;
+  @apply grid h-12 w-12 place-items-center rounded-[13px] text-2xl font-bold text-white;
   background: #fb7185;
-  color: white;
-  border-radius: 13px;
-  font-size: 24px;
-  font-weight: 700;
 }
 
+/* Heading */
 .login-card h1 {
-  margin: 24px 0 8px;
-  font-size: 28px;
+  @apply mt-6 mb-2 text-[28px] font-bold;
 }
 
+/* Description */
 .login-description,
 .demo-hint {
+  @apply text-sm;
   color: #77778b;
-  font-size: 14px;
 }
 
+/* Form labels */
 .login-card label {
-  display: block;
-  margin-top: 20px;
-  margin-bottom: 8px;
-  font-size: 14px;
-  font-weight: 600;
+  @apply mt-5 mb-2 block text-sm font-semibold;
 }
 
+/* Input fields */
 .login-card input {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #dcdbe5;
-  border-radius: 8px;
-  outline: none;
+  @apply w-full rounded-lg border p-3 outline-none;
+  border-color: #dcdbe5;
 }
 
 .login-card input:focus {
@@ -61,35 +48,31 @@
   box-shadow: 0 0 0 3px #fb718520;
 }
 
+/* Login button */
 .login-card button {
-  width: 100%;
-  margin-top: 24px;
-  padding: 13px;
-  border: none;
-  border-radius: 8px;
+  @apply mt-6 w-full rounded-lg border-0 p-[13px] font-semibold text-white;
   background: #e94867;
-  color: white;
   cursor: pointer;
-  font-weight: 600;
 }
 
 .login-card button:hover {
   background: #d93454;
 }
 
+/* Error message */
 .login-error {
+  @apply text-sm;
   color: #be123c;
-  font-size: 14px;
 }
 
+/* Demo hint */
 .demo-hint {
-  margin-top: 20px;
-  text-align: center;
-  font-size: 12px;
+  @apply mt-5 text-center text-xs;
 }
 
+/* Mobile responsive */
 @media (max-width: 450px) {
   .login-card {
-    padding: 25px;
+    @apply p-[25px];
   }
 }

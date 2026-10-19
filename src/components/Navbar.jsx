@@ -34,7 +34,7 @@ export default function Navbar() {
 
         <button
           type="button"
-          className="navbar-logout"
+          className="navbar-logout , cursor-pointer"
           onClick={logout}
         >
           Logout

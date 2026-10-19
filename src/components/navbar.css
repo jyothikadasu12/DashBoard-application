@@ -1,108 +1,68 @@
-
+@reference "../index.css";
 .navbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  min-height: 76px;
-  padding: 14px 26px;
-  border-bottom: 1px solid var(--border-color, #303744);
-  background: var(--surface, #151b27);
-  color: var(--text-primary, #f3f4f6);
+  @apply flex min-h-[76px] items-center justify-between gap-5 px-[26px] py-3.5;
+  @apply border-b text-[var(--text-primary,#f3f4f6)];
+  background: var(--surface, #c9ced8);
+  border-color: var(--border-color, #ca1469);
 }
 
 .navbar-workspace,
 .navbar-right,
 .navbar-profile {
-  display: flex;
-  align-items: center;
+  @apply flex items-center;
 }
 
 .navbar-workspace {
-  gap: 12px;
-  min-width: 0;
+  @apply min-w-0 gap-3;
 }
 
 .navbar-workspace-icon {
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  background: var(--accent, #e11d48);
-  color: #fff;
-  font-weight: 850;
+  @apply grid h-[42px] w-[42px] shrink-0 place-items-center rounded-xl font-extrabold text-white;
+  background: var(--accent, #d4143e);
 }
 
 .navbar-workspace-text,
 .navbar-profile-details {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  min-width: 0;
+  @apply flex min-w-0 flex-col gap-[5px];
 }
 
 .navbar-workspace-text strong,
 .navbar-profile-details strong {
-  overflow: hidden;
+  @apply overflow-hidden text-ellipsis whitespace-nowrap text-[13px];
   color: var(--text-primary, #f3f4f6);
-  font-size: 13px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .navbar-workspace-text span,
 .navbar-profile-details span {
-  overflow: hidden;
+  @apply overflow-hidden text-ellipsis whitespace-nowrap text-[11px];
   color: var(--text-muted, #9ca3af);
-  font-size: 11px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .navbar-right {
-  justify-content: flex-end;
-  gap: 14px;
-  min-width: 0;
+  @apply min-w-0 justify-end gap-3.5;
 }
 
 .navbar-profile {
-  gap: 10px;
-  min-width: 0;
+  @apply min-w-0 gap-2.5;
 }
 
 .navbar-avatar {
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
+  @apply grid h-10 w-10 shrink-0 place-items-center rounded-full object-cover;
 }
 
 .navbar-avatar-fallback {
-  background: var(--accent-soft, #30202c);
+  background: var(--accent-soft, #be419f);
   color: var(--accent, #e11d48);
-  font-weight: 800;
+  @apply font-extrabold;
 }
 
 .navbar-settings-button,
 .navbar-logout-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  padding: 10px 13px;
-  border: 1px solid var(--border-color, #374151);
-  border-radius: 9px;
+  @apply flex items-center justify-center gap-[7px] rounded-lg border px-[13px] py-2.5 text-xs font-semibold transition-colors duration-200;
   background: var(--hover-surface, #202938);
+  border-color: var(--border-color, #374151);
   color: var(--text-primary, #f3f4f6);
-  font-size: 12px;
-  font-weight: 650;
   cursor: pointer;
-  transition: background 0.2s;
 }
 
 .navbar-settings-button:hover {
@@ -112,43 +72,39 @@
 .navbar-logout-button {
   border-color: #71303b;
   color: #fda4af;
+   
 }
 
 .navbar-logout-button:hover {
-  background: #3a202a;
+  background: #a82c5c;
 }
 
 @media (max-width: 800px) {
   .navbar {
-    align-items: flex-start;
-    padding: 14px 16px;
+    @apply items-start px-4;
   }
 
   .navbar-profile-details,
   .navbar-workspace-text span {
-    display: none;
+    @apply hidden;
   }
 
   .navbar-right {
-    flex-wrap: wrap;
-    gap: 8px;
+    @apply flex-wrap gap-2;
   }
 }
 
 @media (max-width: 480px) {
   .navbar {
-    gap: 8px;
-    padding: 12px;
+    @apply gap-2 px-3 py-3;
   }
 
   .navbar-workspace-icon {
-    width: 36px;
-    height: 36px;
+    @apply h-9 w-9;
   }
 
   .navbar-settings-button,
   .navbar-logout-button {
-    padding: 9px;
-    font-size: 11px;
+    @apply px-[9px] py-[9px] text-[11px];
   }
 }
