@@ -1,63 +1,41 @@
 
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext.jsx";
+import { useAuth } from "../context/AuthContext";
 import "./Navbar.css";
 
 export default function Navbar() {
-  const navigate = useNavigate();
-  const { user, profile, workspace, logout } = useAuth();
+  const { user, profile, logout } = useAuth();
 
-  function handleLogout() {
-    logout();
-    navigate("/login", { replace: true });
-  }
+  const displayName = profile?.name || user?.name || "Admin";
+  const displayEmail = profile?.email || user?.email || "admin@example.com";
+
+  const initial = displayName.charAt(0).toUpperCase();
 
   return (
     <header className="navbar">
-      <div className="navbar-workspace">
-        <div className="navbar-workspace-icon">W</div>
-
-        <div className="navbar-workspace-text">
-          <strong>{workspace.name}</strong>
-          <span>Workspace dashboard</span>
-        </div>
+      <div className="navbar-left">
+        <h2>Dashboard</h2>
       </div>
 
       <div className="navbar-right">
-        <button
-          type="button"
-          className="navbar-settings-button"
-          onClick={() => navigate("/settings")}
-        >
-          <span aria-hidden="true">⚙</span>
-          <span>Settings</span>
-        </button>
+        <div className="navbar-user">
+          <div className="navbar-avatar">
+            {profile?.avatar ? (
+              <img src={profile.avatar} alt="Profile" />
+            ) : (
+              <span>{initial}</span>
+            )}
+          </div>
 
-        <div className="navbar-profile">
-          {profile.avatar ? (
-            <img
-              src={profile.avatar}
-              alt=""
-              className="navbar-avatar"
-            />
-          ) : (
-            <div className="navbar-avatar navbar-avatar-fallback">
-              {(profile.name || user?.name || "A")
-                .charAt(0)
-                .toUpperCase()}
-            </div>
-          )}
-
-          <div className="navbar-profile-details">
-            <strong>{profile.name || user?.name || "Admin"}</strong>
-            <span>{profile.email || user?.email || ""}</span>
+          <div className="navbar-user-info">
+            <strong>{displayName}</strong>
+            <span>{displayEmail}</span>
           </div>
         </div>
 
         <button
           type="button"
-          className="navbar-logout-button"
-          onClick={handleLogout}
+          className="navbar-logout"
+          onClick={logout}
         >
           Logout
         </button>

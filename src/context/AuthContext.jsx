@@ -1,14 +1,16 @@
+
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 
 const AuthContext = createContext(null);
 
-// Default profile
-const defaultProfile = {
+const DEFAULT_PROFILE = {
   name: "Admin",
   email: "admin@example.com",
   jobTitle: "Workspace Administrator",
@@ -16,8 +18,7 @@ const defaultProfile = {
   avatar: "",
 };
 
-// Default appearance and notification settings
-const defaultPreferences = {
+const DEFAULT_PREFERENCES = {
   theme: "dark",
   accent: "rose",
   emailNotifications: true,
@@ -25,14 +26,7 @@ const defaultPreferences = {
   inAppNotifications: true,
 };
 
-// Default workspace
-const defaultWorkspace = {
-  name: "My Workspace",
-  description: "Our team's shared workspace",
-};
-
-// Default team members
-const defaultMembers = [
+const DEFAULT_MEMBERS = [
   {
     id: "member-1",
     name: "Alex Morgan",
@@ -47,110 +41,66 @@ const defaultMembers = [
   },
 ];
 
-// Safely read data from localStorage
 function readStorage(key, fallback) {
   try {
-    const value = localStorage.getItem(key);
-    return value ? JSON.parse(value) : fallback;
+    const saved = localStorage.getItem(key);
+    return saved === null ? fallback : JSON.parse(saved);
   } catch {
     return fallback;
   }
 }
 
+function createId() {
+  if (globalThis.crypto?.randomUUID) {
+    return globalThis.crypto.randomUUID();
+  }
+
+  return `member-${Date.now()}-${Math.random()
+    .toString(36)
+    .slice(2)}`;
+}
+
 export function AuthProvider({ children }) {
-  // Authentication state
   const [user, setUser] = useState(() =>
     readStorage("dashboard-user", null)
   );
 
-  // Profile state
   const [profile, setProfile] = useState(() => {
-    const savedProfile = readStorage(
-      "dashboard-profile",
-      {}
-    );
+    const saved = readStorage("dashboard-profile", {});
+    const oldName = localStorage.getItem("dashboard-profile-name");
 
     return {
-      ...defaultProfile,
-      ...savedProfile,
-      name:
-        localStorage.getItem("dashboard-profile-name") ||
-        savedProfile.name ||
-        defaultProfile.name,
+      ...DEFAULT_PROFILE,
+      ...saved,
+      name: saved.name || oldName || DEFAULT_PROFILE.name,
     };
   });
 
-  // Theme and notification preferences
   const [preferences, setPreferences] = useState(() => ({
-    ...defaultPreferences,
+    ...DEFAULT_PREFERENCES,
     ...readStorage("dashboard-preferences", {}),
   }));
 
-  // Workspace state
-  const [workspace, setWorkspace] = useState(() => ({
-    ...defaultWorkspace,
-    ...readStorage("dashboard-workspace", {}),
-  }));
+  const [teamMembers, setTeamMembers] = useState(() => {
+    const saved = readStorage("dashboard-team-members", null);
+    return Array.isArray(saved) ? saved : DEFAULT_MEMBERS;
+  });
 
-  // Shared team members state
-  const [teamMembers, setTeamMembers] = useState(() =>
-    readStorage(
-      "dashboard-team-members",
-      defaultMembers
-    )
-  );
-
-  // Save profile changes
   useEffect(() => {
-    localStorage.setItem(
-      "dashboard-profile",
-      JSON.stringify(profile)
-    );
-
-    localStorage.setItem(
-      "dashboard-profile-name",
-      profile.name || defaultProfile.name
-    );
+    localStorage.setItem("dashboard-profile", JSON.stringify(profile));
+    localStorage.setItem("dashboard-profile-name", profile.name);
   }, [profile]);
 
-  // Save preferences and apply theme globally
   useEffect(() => {
     localStorage.setItem(
       "dashboard-preferences",
       JSON.stringify(preferences)
     );
 
-    localStorage.setItem(
-      "dashboard-theme",
-      preferences.theme
-    );
-
-    localStorage.setItem(
-      "dashboard-email-notifications",
-      String(preferences.emailNotifications)
-    );
-
-    localStorage.setItem(
-      "dashboard-weekly-report",
-      String(preferences.weeklyReport)
-    );
-
-    document.documentElement.dataset.theme =
-      preferences.theme;
-
-    document.documentElement.dataset.accent =
-      preferences.accent;
+    document.documentElement.dataset.theme = preferences.theme;
+    document.documentElement.dataset.accent = preferences.accent;
   }, [preferences]);
 
-  // Save workspace changes
-  useEffect(() => {
-    localStorage.setItem(
-      "dashboard-workspace",
-      JSON.stringify(workspace)
-    );
-  }, [workspace]);
-
-  // Save team member changes
   useEffect(() => {
     localStorage.setItem(
       "dashboard-team-members",
@@ -158,91 +108,92 @@ export function AuthProvider({ children }) {
     );
   }, [teamMembers]);
 
-  // Login
-  function login(email, password) {
-    // Demo authentication only
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem("dashboard-user", JSON.stringify(user));
+    } else {
+      localStorage.removeItem("dashboard-user");
+    }
+  }, [user]);
+
+  const login = useCallback((email, password) => {
     if (
-      email === "admin@example.com" &&
-      password === "admin123"
+      email.trim().toLowerCase() !== "admin@example.com" ||
+      password !== "admin123"
     ) {
-      const loggedInUser = {
-        email,
-        name: profile.name || "Admin",
+      return {
+        success: false,
+        message: "Invalid email or password.",
       };
-
-      setUser(loggedInUser);
-
-      localStorage.setItem(
-        "dashboard-user",
-        JSON.stringify(loggedInUser)
-      );
-
-      return true;
     }
 
-    return false;
-  }
-
-  // Logout
-  function logout() {
-    setUser(null);
-    localStorage.removeItem("dashboard-user");
-  }
-
-  // Update profile
-  function updateProfile(changes) {
-    setProfile((previous) => ({
-      ...previous,
-      ...changes,
-    }));
-
-    setUser((previous) => {
-      if (!previous) return previous;
-
-      const updatedUser = {
-        ...previous,
-        name: changes.name ?? previous.name,
-        email: changes.email ?? previous.email,
-      };
-
-      localStorage.setItem(
-        "dashboard-user",
-        JSON.stringify(updatedUser)
-      );
-
-      return updatedUser;
+    setUser({
+      name: profile.name || "Admin",
+      email: profile.email || "admin@example.com",
     });
-  }
 
-  // Update theme and notification preferences
-  function updatePreferences(changes) {
-    setPreferences((previous) => ({
-      ...previous,
+    return { success: true, message: "Login successful." };
+  }, [profile.name, profile.email]);
+
+  const logout = useCallback(() => {
+    setUser(null);
+  }, []);
+
+  const updateProfile = useCallback((changes) => {
+    setProfile((current) => ({
+      ...current,
       ...changes,
     }));
-  }
 
-  // Update workspace information
-  function updateWorkspace(changes) {
-    setWorkspace((previous) => ({
-      ...previous,
+    setUser((current) => {
+      if (!current) return current;
+
+      return {
+        ...current,
+        ...(changes.name !== undefined && { name: changes.name }),
+        ...(changes.email !== undefined && { email: changes.email }),
+      };
+    });
+  }, []);
+
+  const updatePreferences = useCallback((changes) => {
+    setPreferences((current) => ({
+      ...current,
       ...changes,
     }));
-  }
+  }, []);
 
-  // Add a team member
-  function addTeamMember(member) {
-    const normalizedEmail = member.email
-      .trim()
-      .toLowerCase();
+  const addTeamMember = useCallback((member) => {
+    const name = member.name?.trim() || "";
+    const email = member.email?.trim().toLowerCase() || "";
+    const role = member.role || "Editor";
 
-    const emailExists = teamMembers.some(
-      (existingMember) =>
-        existingMember.email.toLowerCase() ===
-        normalizedEmail
+    if (!name || !email) {
+      return {
+        success: false,
+        message: "Name and email are required.",
+      };
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return {
+        success: false,
+        message: "Enter a valid email address.",
+      };
+    }
+
+    if (!["Admin", "Editor", "Viewer"].includes(role)) {
+      return {
+        success: false,
+        message: "Select a valid role.",
+      };
+    }
+
+    const exists = teamMembers.some(
+      (item) => item.email.trim().toLowerCase() === email
     );
 
-    if (emailExists) {
+    if (exists) {
       return {
         success: false,
         message: "A member with this email already exists.",
@@ -250,63 +201,71 @@ export function AuthProvider({ children }) {
     }
 
     const newMember = {
-      id: crypto.randomUUID(),
-      name: member.name.trim(),
-      email: normalizedEmail,
-      role: member.role,
+      id: createId(),
+      name,
+      email,
+      role,
     };
 
-    setTeamMembers((previousMembers) => [
-      ...previousMembers,
-      newMember,
-    ]);
+    setTeamMembers((current) => [...current, newMember]);
 
     return {
       success: true,
       message: "Team member added successfully.",
+      member: newMember,
     };
-  }
+  }, [teamMembers]);
 
-  // Remove a team member
-  function removeTeamMember(memberId) {
-    setTeamMembers((previousMembers) =>
-      previousMembers.filter(
-        (member) => member.id !== memberId
-      )
+  const removeTeamMember = useCallback((memberId) => {
+    setTeamMembers((current) =>
+      current.filter((member) => member.id !== memberId)
     );
-  }
+  }, []);
 
-  // Update an existing team member
-  function updateTeamMember(memberId, changes) {
-    setTeamMembers((previousMembers) =>
-      previousMembers.map((member) =>
+  const updateTeamMember = useCallback((memberId, changes) => {
+    if (
+      changes.role &&
+      !["Admin", "Editor", "Viewer"].includes(changes.role)
+    ) {
+      return false;
+    }
+
+    setTeamMembers((current) =>
+      current.map((member) =>
         member.id === memberId
           ? { ...member, ...changes }
           : member
       )
     );
-  }
 
-  // Shared Context values and functions
-  const value = {
+    return true;
+  }, []);
+
+  const value = useMemo(() => ({
     user,
     profile,
     preferences,
-    workspace,
     teamMembers,
-
     login,
     logout,
-
     updateProfile,
     updatePreferences,
-    updateWorkspace,
-
-    setTeamMembers,
     addTeamMember,
     removeTeamMember,
     updateTeamMember,
-  };
+  }), [
+    user,
+    profile,
+    preferences,
+    teamMembers,
+    login,
+    logout,
+    updateProfile,
+    updatePreferences,
+    addTeamMember,
+    removeTeamMember,
+    updateTeamMember,
+  ]);
 
   return (
     <AuthContext.Provider value={value}>
@@ -315,14 +274,11 @@ export function AuthProvider({ children }) {
   );
 }
 
-// Custom hook for accessing Context
 export function useAuth() {
   const context = useContext(AuthContext);
 
   if (!context) {
-    throw new Error(
-      "useAuth must be used inside AuthProvider"
-    );
+    throw new Error("useAuth must be used inside AuthProvider");
   }
 
   return context;

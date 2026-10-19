@@ -1,50 +1,42 @@
-import { useAuth } from "../context/AuthContext.jsx";
+
+import { useAuth } from "../context/AuthContext";
 import "./Users.css";
 
 export default function Users() {
-  const { teamMembers, setTeamMembers } = useAuth();
-
-  const handleRemoveUser = (memberId) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to remove this user?"
-    );
-
-    if (!confirmDelete) return;
-
-    setTeamMembers((previousMembers) =>
-      previousMembers.filter((member) => member.id !== memberId)
-    );
-  };
+  const { teamMembers, removeTeamMember, updateTeamMember } = useAuth();
 
   return (
-    <div className="users-page">
-      <div className="users-header">
+    <main className="users-page">
+      <header className="users-header">
         <div>
-          <h1>Team Members</h1>
-          <p>Manage your workspace users.</p>
+          <p className="users-eyebrow">TEAM MANAGEMENT</p>
+          <h1>Users</h1>
+          <p>View and manage all team members.</p>
         </div>
 
-        <div className="users-count">
-          {teamMembers.length} Members
+        <div className="users-total">
+          <span>Total users</span>
+          <strong>{teamMembers.length}</strong>
         </div>
-      </div>
+      </header>
 
-      {teamMembers.length === 0 ? (
-        <div className="users-empty">
-          <h3>No team members yet</h3>
-          <p>
-            Open Settings → Workspace to add your first team member.
-          </p>
+      <section className="users-card">
+        <div className="users-card-heading">
+          <div>
+            <h2>All members</h2>
+            <p>Members added in Settings appear here automatically.</p>
+          </div>
+          <span>{teamMembers.length} total</span>
         </div>
-      ) : (
-        <div className="users-table-wrapper">
+
+        <div className="users-table-wrap">
           <table className="users-table">
             <thead>
               <tr>
                 <th>User</th>
                 <th>Email</th>
                 <th>Role</th>
-                <th>Action</th>
+                <th>Actions</th>
               </tr>
             </thead>
 
@@ -52,37 +44,60 @@ export default function Users() {
               {teamMembers.map((member) => (
                 <tr key={member.id}>
                   <td>
-                    <div className="user-cell">
-                      <div className="user-avatar">
+                    <div className="users-person">
+                      <span className="users-avatar">
                         {member.name.charAt(0).toUpperCase()}
-                      </div>
-
-                      <span>{member.name}</span>
+                      </span>
+                      <strong>{member.name}</strong>
                     </div>
                   </td>
 
                   <td>{member.email}</td>
 
                   <td>
-                    <span className="user-role">
-                      {member.role}
-                    </span>
+                    <select
+                      className="users-role-select"
+                      value={member.role}
+                      onChange={(e) =>
+                        updateTeamMember(member.id, { role: e.target.value })
+                      }
+                      aria-label={`Role for ${member.name}`}
+                    >
+                      <option>Admin</option>
+                      <option>Editor</option>
+                      <option>Viewer</option>
+                    </select>
                   </td>
 
                   <td>
                     <button
-                      className="remove-user-btn"
-                      onClick={() => handleRemoveUser(member.id)}
+                      type="button"
+                      className="users-remove"
+                      onClick={() => {
+                        if (
+                          window.confirm(`Remove ${member.name} from the team?`)
+                        ) {
+                          removeTeamMember(member.id);
+                        }
+                      }}
                     >
                       Remove
                     </button>
                   </td>
                 </tr>
               ))}
+
+              {teamMembers.length === 0 && (
+                <tr>
+                  <td colSpan="4" className="users-empty">
+                    No users found. Add a team member in Settings.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
-      )}
-    </div>
+      </section>
+    </main>
   );
 }
