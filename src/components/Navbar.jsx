@@ -1,6 +1,6 @@
 
 import { useAuth } from "../context/AuthContext";
-import "./Navbar.css";
+import "./navbar.css";
 
 export default function Navbar() {
   const { user, profile, logout } = useAuth();
