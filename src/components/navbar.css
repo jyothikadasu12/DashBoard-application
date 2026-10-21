@@ -2,8 +2,8 @@
 .navbar {
   @apply flex min-h-[76px] items-center justify-between gap-5 px-[26px] py-3.5;
   @apply border-b text-[var(--text-primary,#f3f4f6)];
-  background: var(--surface, #c9ced8);
-  border-color: var(--border-color, #ca1469);
+  background: var(--surface, #ececec);
+  border-color: var(--border-color, #000000);
 }
 
 .navbar-workspace,
@@ -18,7 +18,7 @@
 
 .navbar-workspace-icon {
   @apply grid h-[42px] w-[42px] shrink-0 place-items-center rounded-xl font-extrabold text-white;
-  background: var(--accent, #d4143e);
+  background: var(--accent, #979797);
 }
 
 .navbar-workspace-text,
@@ -35,7 +35,7 @@
 .navbar-workspace-text span,
 .navbar-profile-details span {
   @apply overflow-hidden text-ellipsis whitespace-nowrap text-[11px];
-  color: var(--text-muted, #9ca3af);
+  color: var(--text-muted, #f6f7fa);
 }
 
 .navbar-right {

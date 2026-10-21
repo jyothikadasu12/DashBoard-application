@@ -35,9 +35,7 @@ export default function Dashboard() {
             Welcome back, {profile.name || "Admin"}
           </h1>
 
-          <p>
-            Here's an overview of your workspace and team.
-          </p>
+         
         </div>
 
         <button
