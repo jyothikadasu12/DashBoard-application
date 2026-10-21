@@ -1,9 +1,12 @@
 @reference "../index.css";
+
 .navbar {
   @apply flex min-h-[76px] items-center justify-between gap-5 px-[26px] py-3.5;
-  @apply border-b text-[var(--text-primary,#f3f4f6)];
-  background: var(--surface, #ececec);
-  border-color: var(--border-color, #000000);
+  @apply border-b;
+
+  background: #191624;
+  color: #f3f4f6;
+  border-color: #302b3d;
 }
 
 .navbar-workspace,
@@ -18,7 +21,7 @@
 
 .navbar-workspace-icon {
   @apply grid h-[42px] w-[42px] shrink-0 place-items-center rounded-xl font-extrabold text-white;
-  background: var(--accent, #979797);
+  background: var(--accent, #c02a2a);
 }
 
 .navbar-workspace-text,
@@ -29,15 +32,14 @@
 .navbar-workspace-text strong,
 .navbar-profile-details strong {
   @apply overflow-hidden text-ellipsis whitespace-nowrap text-[13px];
-  color: var(--text-primary, #f3f4f6);
+  color: #f3f4f6;
 }
 
 .navbar-workspace-text span,
 .navbar-profile-details span {
   @apply overflow-hidden text-ellipsis whitespace-nowrap text-[11px];
-  color: var(--text-muted, #f6f7fa);
+  color: #a8a3b8;
 }
-
 .navbar-right {
   @apply min-w-0 justify-end gap-3.5;
 }
@@ -59,9 +61,10 @@
 .navbar-settings-button,
 .navbar-logout-button {
   @apply flex items-center justify-center gap-[7px] rounded-lg border px-[13px] py-2.5 text-xs font-semibold transition-colors duration-200;
-  background: var(--hover-surface, #202938);
-  border-color: var(--border-color, #374151);
-  color: var(--text-primary, #f3f4f6);
+
+  background: #242031;
+  border-color: #40394f;
+  color: #f3f4f6;
   cursor: pointer;
 }
 
